@@ -16,6 +16,10 @@ services:
       - "3306:3306"
     networks:
       - app-network
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -P 3306 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      timeout: 20s
+      retries: 10
 
   nodejs:
     build: .
@@ -30,7 +34,8 @@ services:
     networks:
       - app-network
     depends_on:
-      - mysql
+      mysql:
+           condition: service_healthy
 
 networks:
   app-network:
