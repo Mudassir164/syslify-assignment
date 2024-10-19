@@ -22,12 +22,14 @@ jobs:
     - name: Start the service using  Docker Compose
       run: docker compose -f docker_compose.yaml up -d 
 
+    - name: Check docker logs
+      run: docker logs node-api 
 
-    # Step 9: Test the /drift endpoint and log the output
-#    - name: Test /drift API
- #     run: |
-  #      response=$(curl -s -H "x-api-key: thequickbrownfox" http://localhost:3000/drift)
-   #     echo "Response from /drift: $response"
+     Step 9: Test the /drift endpoint and log the output
+    - name: Test /drift API
+      run: |
+        response=$(curl -s -H "x-api-key: thequickbrownfox" http://localhost:3000/drift)
+        echo "Response from /drift: $response"
 
     # Step 10: Stop all services after the test
     #- name: Stop Docker services
