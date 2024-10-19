@@ -1,0 +1,6 @@
+Dockerfile
+*_compose.yaml
+LICENSE
+README.md
+node_modules
+mysql

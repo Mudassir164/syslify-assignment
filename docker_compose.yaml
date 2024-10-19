@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: releases_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/releases.sql:/docker-entrypoint-initdb.d/releases.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  nodejs:
+    build: .
+    container_name: node-api
+    ports:
+      - "3000:3000"
+#    environment:
+ #     DB_HOST: mysql-db
+  #    DB_USER: user
+   #   DB_PASSWORD: userpassword
+    #  DB_DATABASE: releases_db
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+
+networks:
+  app-network:
