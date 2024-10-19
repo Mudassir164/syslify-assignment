@@ -25,7 +25,7 @@ jobs:
     - name: Check docker logs
       run: docker logs node-api 
 
-     Step 9: Test the /drift endpoint and log the output
+     #Step 9: Test the /drift endpoint and log the output
     - name: Test /drift API
       run: |
         response=$(curl -s -H "x-api-key: thequickbrownfox" http://localhost:3000/drift)
