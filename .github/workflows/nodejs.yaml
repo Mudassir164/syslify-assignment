@@ -1,0 +1,37 @@
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+
+    # Step 4: Start the MySQL database container (using Docker Compose)
+    - name: Start MySQL service using Docker Compose
+      run: docker-compose up -d
+
+    # Step 8: Wait for the server to be fully up
+    - name: Wait for the server to start
+      run: sleep 10 # Wait for the server to initialize
+
+    # Step 9: Test the /drift endpoint and log the output
+    - name: Test /drift API
+      run: |
+        response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" http://localhost:3000/drift)
+        echo "Response from /drift: $response"
+
+    # Step 10: Stop all services after the test
+    - name: Stop Docker services
+      run: docker-compose down
