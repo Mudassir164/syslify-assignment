@@ -22,11 +22,11 @@ services:
     container_name: node-api
     ports:
       - "3000:3000"
-#    environment:
- #     DB_HOST: mysql-db
-  #    DB_USER: user
-   #   DB_PASSWORD: userpassword
-    #  DB_DATABASE: releases_db
+    environment:
+      DB_HOST: mysql-db
+      DB_USER: user
+      DB_PASSWORD: userpassword
+      DB_DATABASE: releases_db
     networks:
       - app-network
     depends_on:
