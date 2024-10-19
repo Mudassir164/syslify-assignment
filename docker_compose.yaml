@@ -31,7 +31,7 @@ services:
       DB_USER: user
       DB_PASSWORD: userpassword
       DB_DATABASE: releases_db
-      API_KEY=thequickbrownfox
+      API_KEY: thequickbrownfox
     networks:
       - app-network
     depends_on:
