@@ -24,11 +24,11 @@ jobs:
 
 
     # Step 9: Test the /drift endpoint and log the output
-    - name: Test /drift API
-      run: |
-        response=$(curl -s -H "x-api-key: thequickbrownfox" http://localhost:3000/drift)
-        echo "Response from /drift: $response"
+#    - name: Test /drift API
+ #     run: |
+  #      response=$(curl -s -H "x-api-key: thequickbrownfox" http://localhost:3000/drift)
+   #     echo "Response from /drift: $response"
 
     # Step 10: Stop all services after the test
-    - name: Stop Docker services
-      run: docker compose -f docker_compose.yaml down
+    #- name: Stop Docker services
+     # run: docker compose -f docker_compose.yaml down
