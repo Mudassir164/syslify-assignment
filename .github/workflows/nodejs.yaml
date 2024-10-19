@@ -15,7 +15,7 @@ jobs:
     steps:
     # Step 1: Checkout the code
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
 
     # Step 4: Start the MySQL database container (using Docker Compose)
