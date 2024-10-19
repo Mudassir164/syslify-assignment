@@ -19,8 +19,8 @@ jobs:
 
 
     # Step 4: Start the MySQL database container (using Docker Compose)
-    - name: Start MySQL service using Docker Compose
-      run: docker-compose up -d
+    - name: Start the service using  Docker Compose
+      run: docker compose -f docker_compose.yaml up -d 
 
     # Step 8: Wait for the server to be fully up
     - name: Wait for the server to start
@@ -34,4 +34,4 @@ jobs:
 
     # Step 10: Stop all services after the test
     - name: Stop Docker services
-      run: docker-compose down
+      run: docker compose -f docker_compose.yaml down
