@@ -30,7 +30,9 @@ jobs:
 
      #Step 9: Test the /drift endpoint and log the output
     - name: Test /drift API
-      run: curl -X GET http://localhost:3000/drift  -H "x-api-key: thequickbrownfox"
+      run: |
+        response=$(curl -X GET http://localhost:3000/drift  -H "x-api-key: thequickbrownfox")
+        echo "Response from /drift: $response"
 
     # Step 10: Stop all services after the test
     #- name: Stop Docker services
