@@ -1,39 +1,47 @@
-name: Node.js CI
+name: Deploy Lambda via S3
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  S3_BUCKET: lambda-functions164
+  LAMBDA_FUNCTION_NAME: node-lambda-function
+  ZIP_FILE_NAME: node-lambda-function.zip
 
 jobs:
-  build-and-test:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
 
-    # Step 4: Start the MySQL database container (using Docker Compose)
-    - name: Start the service using  Docker Compose
-      run: docker compose -f docker_compose.yaml up -d 
-    
-    - name: Check docker container
-      run: docker ps
-
-    - name: Check docker logs
-      run: docker logs node-api 
-
-     #Step 9: Test the /drift endpoint and log the output
-    - name: Test /drift API
+    - name: Install dependencies (example for Node.js)
       run: |
-        response=$(curl -X GET http://localhost:3000/drift  -H "x-api-key: thequickbrownfox")
-        echo "Response from /drift: $response"
+        npm install
+        npm run build
 
-    # Step 10: Stop all services after the test
-    #- name: Stop Docker services
-     # run: docker compose -f docker_compose.yaml down
+    - name: Zip Lambda package
+      run: zip -r ${{ env.ZIP_FILE_NAME }} . -x *.git*
+
+    - name: Upload to S3
+      run: |
+        aws s3 cp ${{ env.ZIP_FILE_NAME }} s3://${{ env.S3_BUCKET }}/${{ env.ZIP_FILE_NAME }}
+
+    - name: Update Lambda function
+      run: |
+        aws lambda update-function-code \
+          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+          --s3-bucket ${{ env.S3_BUCKET }} \
+          --s3-key ${{ env.ZIP_FILE_NAME }} \
+          --region ${{ env.AWS_REGION }}
