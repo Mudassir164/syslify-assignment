@@ -1,47 +1,40 @@
-name: Deploy Lambda via S3
+name: Deploy AWS Lambda (Node.js)
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
-
-env:
-  AWS_REGION: us-east-1
-  S3_BUCKET: lambdafunction164
-  LAMBDA_FUNCTION_NAME: nodejsfunction
-  ZIP_FILE_NAME: node-lambda-function.zip
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-    # - name: Configure AWS credentials
-    #   uses: aws-actions/configure-aws-credentials@v1
-    #   with:
-    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     aws-region: ${{ env.AWS_REGION }}
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Install dependencies (example for Node.js)
-      run: |
-        npm install
-        npm run build
+      - name: Install Dependencies
+        run: |
+          npm install
+          mkdir package
+          cp -r node_modules package/
+          cp -r index.js package/
+          cd package && zip -r ../lambda.zip .
 
-    - name: Zip Lambda package
-      run: zip -r ${{ env.ZIP_FILE_NAME }} . -x *.git*
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Upload to S3
-      run: |
-        aws s3 cp ${{ env.ZIP_FILE_NAME }} s3://${{ env.S3_BUCKET }}/${{ env.ZIP_FILE_NAME }}
-
-    - name: Update Lambda function
-      run: |
-        aws lambda update-function-code \
-          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
-          --s3-bucket ${{ env.S3_BUCKET }} \
-          --s3-key ${{ env.ZIP_FILE_NAME }} \
-          --region ${{ env.AWS_REGION }}
+      - name: Deploy to AWS Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name nodejsfunction \
+            --zip-file fileb://lambda.zip
