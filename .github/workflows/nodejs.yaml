@@ -7,8 +7,8 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  S3_BUCKET: lambda-functions164
-  LAMBDA_FUNCTION_NAME: node-lambda-function
+  S3_BUCKET: lambdafunction164
+  LAMBDA_FUNCTION_NAME: nodejsfunction
   ZIP_FILE_NAME: node-lambda-function.zip
 
 jobs:
