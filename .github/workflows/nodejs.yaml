@@ -21,10 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          mkdir package
-          cp -r node_modules package/
-          cp -r index.js package/
-          cd package && zip -r ../lambda.zip .
+          zip -r ../lambda.zip .
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
