@@ -3,7 +3,7 @@ name: Deploy AWS Lambda (Node.js)
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
