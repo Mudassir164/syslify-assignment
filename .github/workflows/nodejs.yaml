@@ -34,3 +34,4 @@ jobs:
       - name: Deploy to AWS Lambda
         run: |
           aws s3 cp lambda.zip s3://lamdafunctions-bucket164
+          aws lambda update-function-code --function-name nodejsfunction --s3-bucket lamdafunctions-bucket164 --s3-key lambda.zip
