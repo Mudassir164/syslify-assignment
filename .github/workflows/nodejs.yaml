@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          zip -r ../lambda.zip .
+          zip -r lambda.zip .
           echo ${{ secrets.AWS_ACCESS_KEY_ID }}
 
       - name: Configure AWS Credentials
@@ -33,6 +33,4 @@ jobs:
 
       - name: Deploy to AWS Lambda
         run: |
-          aws lambda update-function-code \
-            --function-name nodejsfunction \
-            --zip-file fileb://lambda.zip
+          aws s3 cp lambda.zip s3://lamdafunctions-bucket164
